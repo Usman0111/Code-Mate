@@ -17,7 +17,7 @@ const AppNavbar = () => {
   return (
     <div>
       <Navbar color="dark" dark expand="md">
-        <NavbarBrand href="/">Code Mate</NavbarBrand>
+        <NavbarBrand href="/">{" \u003c Code / Mate \u003e"}</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
