@@ -6,6 +6,6 @@ This app allows two users to connect and edit code in real time. It also allows 
 
 ### Inspiration
 
-Many beginner programmers struggle to graps introductory programming concepts. Hence, they seek help from their peers. Code Mate is intented to assist this process allow real time collaboration over the web.
+Many beginner programmers struggle to graps introductory programming concepts. Hence, they seek help from their peers. Code Mate is intented to assist this process by allowing real time collaboration over the web.
 
 This app is still in development process
