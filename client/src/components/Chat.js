@@ -1,12 +1,15 @@
 import React from "react";
+import { Input } from "reactstrap";
 
 const Example = props => {
   return (
     <div>
-      <div class="card">
-        <div class="card-body" style={{ height: "300px", width: "750px" }}>
+      <h3 className="text-secondary">Chat Room</h3>
+      <div className="card">
+        <div className="card-body" style={{ height: "240px", width: "750px" }}>
           Place Holder for the chat Room
         </div>
+        <Input />
       </div>
     </div>
   );

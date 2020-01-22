@@ -8,21 +8,66 @@ import {
   Form,
   FormGroup
 } from "reactstrap";
-
+import axios from "axios";
 import classnames from "classnames";
 
 const IoPanel = props => {
   const [activeTab, setActiveTab] = useState("1");
+  const [input, setInput] = useState("");
+  const [output, setOutput] = useState("Press Start...");
 
   const toggle = tab => {
     if (activeTab !== tab) setActiveTab(tab);
+  };
+
+  const changeInput = event => {
+    setInput(event.target.value);
+  };
+
+  const baxios = axios.create({
+    headers: {
+      Authorization: "Token 8b0ebe3b-538e-4886-85f2-3bb8376c0e95"
+    }
+  });
+
+  const runCode = () => {
+    setOutput("Running...");
+    toggle("2");
+    baxios
+      .post(
+        "https://cors-anywhere.herokuapp.com/https://run.glot.io/languages/cpp/latest",
+        {
+          stdin: input,
+          files: [
+            {
+              name: "main.cpp",
+              content: props.valueGetter.current()
+            }
+          ]
+        },
+        {
+          "Content-Type": "application/json"
+        }
+      )
+      .then(res => {
+        res.data.stderr
+          ? setOutput(res.data.stderr)
+          : setOutput(res.data.stdout);
+      })
+      .catch(err => console.log(err));
   };
 
   return (
     <div>
       <Nav tabs>
         <NavItem>
-          <NavLink>Run</NavLink>
+          <NavLink
+            onClick={() => {
+              runCode();
+            }}
+          >
+            Run
+          </NavLink>
         </NavItem>
         <NavItem>
           <NavLink
@@ -50,18 +95,25 @@ const IoPanel = props => {
         <TabPane tabId="1">
           <Form>
             <FormGroup>
-              <textarea rows="8" cols="102"></textarea>
+              <textarea
+                value={input}
+                onChange={changeInput}
+                rows="8"
+                cols="102"
+              ></textarea>
             </FormGroup>
           </Form>
         </TabPane>
         <TabPane tabId="2">
           <div>
-            <div class="card">
+            <div className="card">
               <div
-                class="card-body"
+                className="card-body overflow-auto"
                 style={{ height: "200px", width: "750px" }}
               >
-                Press Run
+                {output.split("\n").map((line, index) => (
+                  <div key={index}>{line}</div>
+                ))}
               </div>
             </div>
           </div>
