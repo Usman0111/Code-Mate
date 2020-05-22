@@ -1,33 +1,16 @@
-import React, { useRef } from "react";
+import React from "react";
 import AppNavbar from "./components/AppNavbar";
-import TextEditor from "./components/TextEditor";
-import IoPanel from "./components/IoPanel";
-import Chat from "./components/Chat";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+import Room from "./pages/Room";
+import Home from "./pages/Home";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 function App() {
-  const valueGetter = useRef();
-
   return (
-    <div className="App">
+    <Router>
       <AppNavbar />
-      <div className="container-fluid">
-        <div className="row">
-          <div className="col-sm-6">
-            <TextEditor valueGetter={valueGetter} />
-          </div>
-          <div className="col-sm-6">
-            <div className="row h-50 d-inline-block">
-              <IoPanel valueGetter={valueGetter} />
-            </div>
-            <div className="row h-50 d-inline-block">
-              <Chat />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+      <Route path="/" component={Home} exact />
+      <Route path="/room" component={Room} />
+    </Router>
   );
 }
 

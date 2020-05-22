@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
 
-const TextEditor = props => {
+const TextEditor = (props) => {
   const [isEditorReady, setIsEditorReady] = useState(false);
 
-  const handleEditorDidMount = _valueGetter => {
+  const handleEditorDidMount = (_valueGetter) => {
     setIsEditorReady(!isEditorReady);
     props.valueGetter.current = _valueGetter;
   };
