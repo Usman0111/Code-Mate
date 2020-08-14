@@ -6,28 +6,28 @@ import {
   NavItem,
   NavLink,
   Form,
-  FormGroup
+  FormGroup,
 } from "reactstrap";
 import axios from "axios";
 import classnames from "classnames";
 
-const IoPanel = props => {
+const IoPanel = (props) => {
   const [activeTab, setActiveTab] = useState("1");
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("Press Start...");
 
-  const toggle = tab => {
+  const toggle = (tab) => {
     if (activeTab !== tab) setActiveTab(tab);
   };
 
-  const changeInput = event => {
+  const changeInput = (event) => {
     setInput(event.target.value);
   };
 
   const baxios = axios.create({
     headers: {
-      Authorization: "Token 8b0ebe3b-538e-4886-85f2-3bb8376c0e95"
-    }
+      Authorization: "Token 8b0ebe3b-538e-4886-85f2-3bb8376c0e95",
+    },
   });
 
   const runCode = () => {
@@ -41,20 +41,20 @@ const IoPanel = props => {
           files: [
             {
               name: "main.cpp",
-              content: props.valueGetter.current()
-            }
-          ]
+              content: props.code,
+            },
+          ],
         },
         {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         }
       )
-      .then(res => {
+      .then((res) => {
         res.data.stderr
           ? setOutput(res.data.stderr)
           : setOutput(res.data.stdout);
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   };
 
   return (

@@ -1,0 +1,24 @@
+{
+  "name": "code-mate",
+  "version": "1.0.0",
+  "description": "real time code collaboration tool",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Usman0111/Code-Mate.git"
+  },
+  "author": "Muhammad Usman",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Usman0111/Code-Mate/issues"
+  },
+  "homepage": "https://github.com/Usman0111/Code-Mate#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4",
+    "socket.io": "^2.3.0"
+  }
+}

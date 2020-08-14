@@ -1,25 +1,24 @@
-import React, { useState } from "react";
-import Editor from "@monaco-editor/react";
+import React from "react";
+import { ControlledEditor } from "@monaco-editor/react";
+import { socket } from "../socket.js";
 
 const TextEditor = (props) => {
-  const [isEditorReady, setIsEditorReady] = useState(false);
+  // const setCode = (code) => props.setCode(code);
 
-  const handleEditorDidMount = (_valueGetter) => {
-    setIsEditorReady(!isEditorReady);
-    props.valueGetter.current = _valueGetter;
+  const handleEdiorChange = (ev, value) => {
+    socket.emit("editCode", value);
+    props.setCode(value);
   };
 
   return (
     <>
-      <Editor
+      <ControlledEditor
         height="87vh"
         language="cpp"
-        value={
-          '#include <iostream>\r\nusing namespace std;\r\nint main()\r\n{\r\n    cout << "Hello World" << endl;\r\n    cout << "Hello World" << endl;\r\n    cout << "Hello World" << endl;\r\n    return 0;\r\n}\r\n'
-        }
+        value={props.code}
         theme="dark"
         width="100%"
-        editorDidMount={handleEditorDidMount}
+        onChange={handleEdiorChange}
       />
     </>
   );
