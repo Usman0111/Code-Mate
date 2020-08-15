@@ -6,6 +6,6 @@ This app allows two users to connect and edit code in real time. It also allows 
 
 ### Inspiration
 
-The process of trying to help my peers debug their coding assignments remotely (through Groupme) is slow and inefficient. This web app is intended to improve that proces.
+The process of trying to help my peers debug their coding assignments remotely (through Groupme) is slow and inefficient. This web app is intended to improve that process.
 
-#### This app is still in development process
+#### This app is still under development

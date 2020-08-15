@@ -9,9 +9,6 @@ import { socket } from "../socket.js";
 const Room = ({ location }) => {
   // const [name, setName] = useState("");
   // const [room, setRoom] = useState("");
-  const [code, setCode] = useState(
-    '#include <iostream>\r\nusing namespace std;\r\nint main()\r\n{\r\n    cout << "Hello World" << endl;\r\n    return 0;\r\n}\r\n'
-  );
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
@@ -28,22 +25,15 @@ const Room = ({ location }) => {
     };
   }, [location.search]);
 
-  useEffect(() => {
-    socket.on("ChangedCode", (code) => {
-      console.log("test");
-      setCode(code);
-    });
-  }, [location.search]);
-
   return (
     <Container fluid={true}>
       <Row>
         <Col sm="6">
-          <TextEditor code={code} setCode={setCode} />
+          <TextEditor />
         </Col>
         <Col sm="6">
           <div className="row h-50 d-inline-block">
-            <IoPanel code={code} />
+            <IoPanel />
           </div>
           <div className="row h-50 d-inline-block">
             <Chat />

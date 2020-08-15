@@ -43,6 +43,7 @@ io.on("connection", (socket) => {
 
   socket.on("editCode", (code) => {
     const user = getUser(socket.id);
+    console.log(code);
     socket.broadcast.to(user.room).emit("ChangedCode", code);
   });
 

@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useState, useEffect, useReducer, useRef } from "react";
 import { ControlledEditor } from "@monaco-editor/react";
 import { socket } from "../socket.js";
 
 const TextEditor = (props) => {
-  // const setCode = (code) => props.setCode(code);
+  const [code, setCode] = useState("");
 
-  const handleEdiorChange = (ev, value) => {
-    socket.emit("editCode", value);
-    props.setCode(value);
+  useEffect(() => {
+    socket.on("ChangedCode", (change) => {
+      setCode(change);
+    });
+  }, []);
+
+  useEffect(() => console.log("render"), []);
+
+  const handleEditorChange = (ev, value) => {
+    //socket.emit("editCode", value);
   };
 
   return (
@@ -15,10 +22,10 @@ const TextEditor = (props) => {
       <ControlledEditor
         height="87vh"
         language="cpp"
-        value={props.code}
+        value={code}
         theme="dark"
         width="100%"
-        onChange={handleEdiorChange}
+        onChange={handleEditorChange}
       />
     </>
   );
