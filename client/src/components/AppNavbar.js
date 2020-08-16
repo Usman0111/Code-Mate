@@ -6,7 +6,7 @@ import {
   Collapse,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
 } from "reactstrap";
 
 const AppNavbar = () => {

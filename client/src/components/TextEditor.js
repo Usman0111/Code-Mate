@@ -1,31 +1,38 @@
-import React, { useState, useEffect, useReducer, useRef } from "react";
-import { ControlledEditor } from "@monaco-editor/react";
-import { socket } from "../socket.js";
+import React, { useRef, useState, useEffect } from "react";
+import Editor from "@monaco-editor/react";
+import { socket } from "../socket";
 
-const TextEditor = (props) => {
-  const [code, setCode] = useState("");
+const TextEditor = () => {
+  const [isEditorReady, setIsEditorReady] = useState(false);
+  const valueGetter = useRef();
+  const [code, setCode] = useState("const a;");
 
   useEffect(() => {
-    socket.on("ChangedCode", (change) => {
-      setCode(change);
+    socket.on("changedCode", (newCode) => {
+      //console.log("receiveCode");
+      setCode(newCode);
     });
   }, []);
 
-  useEffect(() => console.log("render"), []);
+  const logKey = (e) => {
+    //console.log("emitCode");
+    socket.emit("editCode", valueGetter.current());
+  };
 
-  const handleEditorChange = (ev, value) => {
-    //socket.emit("editCode", value);
+  const handleEditorDidMount = (_valueGetter) => {
+    setIsEditorReady(true);
+    valueGetter.current = _valueGetter;
+    document.addEventListener("keydown", logKey);
+    document.addEventListener("keyup", logKey);
   };
 
   return (
     <>
-      <ControlledEditor
-        height="87vh"
-        language="cpp"
+      <Editor
+        height="90vh"
+        language="javascript"
         value={code}
-        theme="dark"
-        width="100%"
-        onChange={handleEditorChange}
+        editorDidMount={handleEditorDidMount}
       />
     </>
   );
