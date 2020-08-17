@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import TextEditor from "../components/TextEditor";
 import IoPanel from "../components/IoPanel";
 import Chat from "../components/Chat";
+import Toolbar from "../components/Toolbar";
 import { Container, Row, Col } from "reactstrap";
 import queryString from "query-string";
 import { socket } from "../socket.js";
@@ -29,6 +30,7 @@ const Room = ({ location }) => {
     <Container fluid={true}>
       <Row>
         <Col sm="6">
+          <Toolbar />
           <TextEditor />
         </Col>
         <Col sm="6">

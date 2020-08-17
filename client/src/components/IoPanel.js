@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   TabContent,
   TabPane,
@@ -8,70 +8,24 @@ import {
   Form,
   FormGroup,
 } from "reactstrap";
-import axios from "axios";
 import classnames from "classnames";
+import { DataContext } from "../dataContext";
 
 const IoPanel = (props) => {
-  const [activeTab, setActiveTab] = useState("1");
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("Press Start...");
+  const { data, dispatch } = useContext(DataContext);
 
   const toggle = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab);
+    if (data.activeTab !== tab) dispatch({ type: "SET_TAB", tab });
   };
 
-  const changeInput = (event) => {
-    setInput(event.target.value);
-  };
-
-  const baxios = axios.create({
-    headers: {
-      Authorization: "Token 8b0ebe3b-538e-4886-85f2-3bb8376c0e95",
-    },
-  });
-
-  const runCode = () => {
-    setOutput("Running...");
-    toggle("2");
-    baxios
-      .post(
-        "https://cors-anywhere.herokuapp.com/https://run.glot.io/languages/cpp/latest",
-        {
-          stdin: input,
-          files: [
-            {
-              name: "main.cpp",
-              content: props.code,
-            },
-          ],
-        },
-        {
-          "Content-Type": "application/json",
-        }
-      )
-      .then((res) => {
-        res.data.stderr
-          ? setOutput(res.data.stderr)
-          : setOutput(res.data.stdout);
-      })
-      .catch((err) => console.log(err));
-  };
+  const changeInput = (event) => {};
 
   return (
     <div>
       <Nav tabs>
         <NavItem>
           <NavLink
-            onClick={() => {
-              runCode();
-            }}
-          >
-            Run
-          </NavLink>
-        </NavItem>
-        <NavItem>
-          <NavLink
-            className={classnames({ active: activeTab === "1" })}
+            className={classnames({ active: data.activeTab === "1" })}
             onClick={() => {
               toggle("1");
             }}
@@ -81,7 +35,7 @@ const IoPanel = (props) => {
         </NavItem>
         <NavItem>
           <NavLink
-            className={classnames({ active: activeTab === "2" })}
+            className={classnames({ active: data.activeTab === "2" })}
             onClick={() => {
               toggle("2");
             }}
@@ -91,12 +45,12 @@ const IoPanel = (props) => {
         </NavItem>
       </Nav>
 
-      <TabContent activeTab={activeTab}>
+      <TabContent activeTab={data.activeTab}>
         <TabPane tabId="1">
           <Form>
             <FormGroup>
               <textarea
-                value={input}
+                value={""}
                 onChange={changeInput}
                 rows="8"
                 cols="102"
@@ -111,7 +65,7 @@ const IoPanel = (props) => {
                 className="card-body overflow-auto"
                 style={{ height: "200px", width: "750px" }}
               >
-                {output.split("\n").map((line, index) => (
+                {data.output.split("\n").map((line, index) => (
                   <div key={index}>{line}</div>
                 ))}
               </div>
