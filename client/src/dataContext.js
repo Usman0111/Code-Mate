@@ -9,7 +9,6 @@ const initialState = {
   input: "",
   output: "Press Start...",
   language: "",
-  running: false,
   activeTab: "1",
 };
 

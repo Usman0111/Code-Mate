@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button } from "reactstrap";
 import axios from "axios";
 import { DataContext } from "../dataContext";
+import { socket } from "../socket";
 
 const baxios = axios.create({
   headers: {
@@ -35,13 +36,29 @@ const Toolbar = () => {
         res.data.stderr
           ? dispatch({ type: "SET_OUTPUT", output: res.data.stderr })
           : dispatch({ type: "SET_OUTPUT", output: res.data.stdout });
+        socket.emit("completeSignal", res.data.stdout || res.data.stderr);
       })
       .catch((err) => console.log(err));
   };
 
+  const syncRun = () => {
+    socket.emit("runSignal");
+    runCode();
+  };
+
+  useEffect(() => {
+    socket.on("runSignal", () => {
+      dispatch({ type: "SET_OUTPUT", output: "Running Code..." });
+      dispatch({ type: "SET_TAB", tab: "2" });
+    });
+    socket.on("completeSignal", (output) =>
+      dispatch({ type: "SET_OUTPUT", output })
+    );
+  }, [dispatch]);
+
   return (
     <div>
-      <Button color="success" onClick={runCode}>
+      <Button color="success" onClick={syncRun}>
         Run
       </Button>
     </div>

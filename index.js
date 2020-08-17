@@ -35,9 +35,7 @@ io.on("connection", (socket) => {
 
   socket.on("sendMessage", (message, callback) => {
     const user = getUser(socket.id);
-
     io.to(user.room).emit("message", { user: user.name, text: message });
-
     callback();
   });
 
@@ -46,13 +44,27 @@ io.on("connection", (socket) => {
     socket.broadcast.to(user.room).emit("changedCode", code);
   });
 
+  socket.on("runSignal", () => {
+    const user = getUser(socket.id);
+    socket.broadcast.to(user.room).emit("runSignal");
+  });
+
+  socket.on("completeSignal", (output) => {
+    const user = getUser(socket.id);
+    socket.broadcast.to(user.room).emit("completeSignal", output);
+  });
+
+  socket.on("editInput", (input) => {
+    const user = getUser(socket.id);
+    socket.broadcast.to(user.room).emit("changeInput", input);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
     const user = removeUser(socket.id);
-
     if (user) {
       io.to(user.room).emit("message", {
-        user: "Admin",
+        user: "admin",
         text: `${user.name} has left.`,
       });
     }
