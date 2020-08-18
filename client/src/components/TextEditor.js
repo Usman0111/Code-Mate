@@ -6,19 +6,27 @@ import { DataContext } from "../dataContext";
 const TextEditor = () => {
   //const [isEditorReady, setIsEditorReady] = useState(false);
   const { data, dispatch } = useContext(DataContext);
+  const dataRef = useRef(data);
+  dataRef.current = data;
   const valueGetter = useRef();
 
   useEffect(() => {
-    socket.on("changedCode", (newCode) => {
+    socket.on("changedCode", (info) => {
       //console.log("receiveCode")
-      dispatch({ type: "EDIT_CODE", newCode });
+      //if (info.language === data.language) {
+      dispatch({ type: "EDIT_CODE", newCode: info.code });
+      //}
     });
-  }, [dispatch]);
+  }, [dispatch, data.language]);
 
   const logKey = (e) => {
     //console.log("emitCode");
+
     dispatch({ type: "EDIT_CODE", newCode: valueGetter.current() });
-    socket.emit("editCode", valueGetter.current());
+    socket.emit("editCode", {
+      code: valueGetter.current(),
+      //language: dataRef.current.language,
+    });
   };
 
   const handleEditorDidMount = (_valueGetter) => {
@@ -32,7 +40,7 @@ const TextEditor = () => {
     <>
       <Editor
         height="90vh"
-        language="cpp"
+        language={data.language}
         value={data.code}
         editorDidMount={handleEditorDidMount}
       />
