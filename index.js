@@ -39,9 +39,9 @@ io.on("connection", (socket) => {
     callback();
   });
 
-  socket.on("editCode", (info) => {
+  socket.on("editCode", (code) => {
     const user = getUser(socket.id);
-    socket.broadcast.to(user.room).emit("changedCode", info);
+    socket.broadcast.to(user.room).emit("changedCode", code);
   });
 
   socket.on("runSignal", () => {
@@ -62,6 +62,11 @@ io.on("connection", (socket) => {
   socket.on("syncLanguage", (info) => {
     const user = getUser(socket.id);
     socket.broadcast.to(user.room).emit("syncLanguage", info);
+  });
+
+  socket.on("syncReset", () => {
+    const user = getUser(socket.id);
+    socket.broadcast.to(user.room).emit("syncReset");
   });
 
   socket.on("disconnect", () => {

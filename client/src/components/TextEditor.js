@@ -4,33 +4,23 @@ import { socket } from "../socket";
 import { DataContext } from "../dataContext";
 
 const TextEditor = () => {
-  //const [isEditorReady, setIsEditorReady] = useState(false);
   const { data, dispatch } = useContext(DataContext);
   const dataRef = useRef(data);
   dataRef.current = data;
   const valueGetter = useRef();
 
   useEffect(() => {
-    socket.on("changedCode", (info) => {
-      //console.log("receiveCode")
-      //if (info.language === data.language) {
-      dispatch({ type: "EDIT_CODE", newCode: info.code });
-      //}
+    socket.on("changedCode", (newCode) => {
+      dispatch({ type: "EDIT_CODE", newCode });
     });
-  }, [dispatch, data.language]);
+  }, [dispatch]);
 
   const logKey = (e) => {
-    //console.log("emitCode");
-
     dispatch({ type: "EDIT_CODE", newCode: valueGetter.current() });
-    socket.emit("editCode", {
-      code: valueGetter.current(),
-      //language: dataRef.current.language,
-    });
+    socket.emit("editCode", valueGetter.current());
   };
 
   const handleEditorDidMount = (_valueGetter) => {
-    //setIsEditorReady(true);
     valueGetter.current = _valueGetter;
     document.addEventListener("keydown", logKey);
     document.addEventListener("keyup", logKey);

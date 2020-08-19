@@ -8,16 +8,9 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import axios from "axios";
 import { DataContext } from "../dataContext";
 import { socket } from "../socket";
 import languageSet from "./languages";
-
-const baxios = axios.create({
-  headers: {
-    Authorization: "Token 8b0ebe3b-538e-4886-85f2-3bb8376c0e95",
-  },
-});
 
 const Toolbar = () => {
   const { data, dispatch } = useContext(DataContext);
@@ -32,27 +25,31 @@ const Toolbar = () => {
   const runCode = () => {
     dispatch({ type: "SET_OUTPUT", output: "Running Code..." });
     dispatch({ type: "SET_TAB", tab: "2" });
-    baxios
-      .post(
-        `https://cors-anywhere.herokuapp.com/https://run.glot.io/languages/${data.language}/latest`,
-        {
+    fetch(
+      `https://cors-anywhere.herokuapp.com/https://run.glot.io/languages/${data.language}/latest`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Token 8b0ebe3b-538e-4886-85f2-3bb8376c0e95",
+        },
+        body: JSON.stringify({
           stdin: data.input,
           files: [
             {
-              name: `main.${data.extension}`,
+              name: `Main${data.extension}`,
               content: data.code,
             },
           ],
-        },
-        {
-          "Content-Type": "application/json",
-        }
-      )
-      .then((res) => {
-        res.data.stderr
-          ? dispatch({ type: "SET_OUTPUT", output: res.data.stderr })
-          : dispatch({ type: "SET_OUTPUT", output: res.data.stdout });
-        socket.emit("completeSignal", res.data.stdout || res.data.stderr);
+        }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        data.stderr
+          ? dispatch({ type: "SET_OUTPUT", output: data.stderr })
+          : dispatch({ type: "SET_OUTPUT", output: data.stdout });
+        socket.emit("completeSignal", data.stdout || data.stderr);
       })
       .catch((err) => console.log(err));
   };
@@ -70,29 +67,21 @@ const Toolbar = () => {
     socket.on("completeSignal", (output) =>
       dispatch({ type: "SET_OUTPUT", output })
     );
-
-    socket.on("syncLanguage", (option) => {
-      selectLanguage(option);
-      const list = document.getElementById("languages");
-      list.value = option;
-    });
   }, [dispatch]);
 
   const clearCode = () => {
     const currentLanguage = languages.find(
-      (language) => language.name === data.language
+      (language) => language.name === dataRef.current.language
     );
     currentLanguage.previousCode = "";
 
     setLaguages([
       ...languages.map((language) =>
-        language.name === data.language ? currentLanguage : language
+        language.name === dataRef.current.language ? currentLanguage : language
       ),
     ]);
 
     dispatch({ type: "EDIT_CODE", newCode: currentLanguage.defaultCode });
-    socket.emit("editCode", currentLanguage.defaultCode);
-    toggle();
   };
 
   const selectLanguage = (option) => {
@@ -118,9 +107,26 @@ const Toolbar = () => {
     });
   };
 
+  useEffect(() => {
+    socket.on("syncLanguage", (option) => {
+      selectLanguage(option);
+      const list = document.getElementById("languages");
+      list.value = option;
+    });
+    socket.on("syncReset", () => {
+      clearCode();
+    });
+  }, []);
+
   const syncSelectLanguage = (e) => {
     selectLanguage(e.target.value);
     socket.emit("syncLanguage", e.target.value);
+  };
+
+  const syncClearCode = () => {
+    clearCode();
+    socket.emit("syncReset");
+    toggle();
   };
 
   return (
@@ -140,7 +146,7 @@ const Toolbar = () => {
           </Alert>
         </ModalBody>
         <ModalFooter>
-          <Button color="danger" onClick={clearCode}>
+          <Button color="danger" onClick={syncClearCode}>
             Confirm
           </Button>{" "}
           <Button color="primary" onClick={toggle}>
@@ -158,6 +164,10 @@ const Toolbar = () => {
       >
         <option value="cpp">C++</option>
         <option value="python">Python</option>
+        <option value="javascript">JavaScript</option>
+        <option value="java">Java</option>
+        <option value="go">Go</option>
+        <option value="csharp">C#</option>
       </Input>
     </div>
   );
