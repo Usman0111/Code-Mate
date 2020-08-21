@@ -5,7 +5,6 @@ import {
   ModalBody,
   ModalFooter,
   Alert,
-  Label,
   Input,
 } from "reactstrap";
 import { DataContext } from "../dataContext";
@@ -113,6 +112,9 @@ const Toolbar = () => {
       const list = document.getElementById("languages");
       list.value = option;
     });
+  }, []);
+
+  useEffect(() => {
     socket.on("syncReset", () => {
       clearCode();
     });
@@ -120,7 +122,7 @@ const Toolbar = () => {
 
   const syncSelectLanguage = (e) => {
     selectLanguage(e.target.value);
-    socket.emit("syncLanguage", e.target.value);
+    socket.emit("syncLanguage", { language: e.target.value, newUser: false });
   };
 
   const syncClearCode = () => {
@@ -133,11 +135,45 @@ const Toolbar = () => {
     <div>
       <Button color="success" onClick={syncRun}>
         Run
+        <svg
+          width="1em"
+          height="1em"
+          viewBox="0 0 16 16"
+          class="bi bi-caret-right"
+          fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M6 12.796L11.481 8 6 3.204v9.592zm.659.753l5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"
+          />
+        </svg>
       </Button>
 
-      <Button color="danger" onClick={toggle}>
-        Reset
-      </Button>
+      <span className="ml-2">
+        <Button color="danger" onClick={toggle} className="ml-2">
+          Reset
+          <span className="ml-1">
+            <svg
+              width="1em"
+              height="1em"
+              viewBox="0 0 16 16"
+              class="bi bi-arrow-repeat"
+              fill="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M2.854 7.146a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L2.5 8.207l1.646 1.647a.5.5 0 0 0 .708-.708l-2-2zm13-1a.5.5 0 0 0-.708 0L13.5 7.793l-1.646-1.647a.5.5 0 0 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0 0-.708z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M8 3a4.995 4.995 0 0 0-4.192 2.273.5.5 0 0 1-.837-.546A6 6 0 0 1 14 8a.5.5 0 0 1-1.001 0 5 5 0 0 0-5-5zM2.5 7.5A.5.5 0 0 1 3 8a5 5 0 0 0 9.192 2.727.5.5 0 1 1 .837.546A6 6 0 0 1 2 8a.5.5 0 0 1 .501-.5z"
+              />
+            </svg>
+          </span>
+        </Button>
+      </span>
       <Modal isOpen={modal} toggle={toggle}>
         <ModalBody>
           <Alert color="danger">
@@ -155,20 +191,22 @@ const Toolbar = () => {
         </ModalFooter>
       </Modal>
 
-      <Label for="languages">Language</Label>
-      <Input
-        type="select"
-        name="languages"
-        id="languages"
-        onChange={syncSelectLanguage}
-      >
-        <option value="cpp">C++</option>
-        <option value="python">Python</option>
-        <option value="javascript">JavaScript</option>
-        <option value="java">Java</option>
-        <option value="go">Go</option>
-        <option value="csharp">C#</option>
-      </Input>
+      <div className="float-right">
+        <Input
+          className="bg-secondary text-white"
+          type="select"
+          name="languages"
+          id="languages"
+          onChange={syncSelectLanguage}
+        >
+          <option value="cpp">C++</option>
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
+          <option value="go">Go</option>
+          <option value="csharp">C#</option>
+        </Input>
+      </div>
     </div>
   );
 };

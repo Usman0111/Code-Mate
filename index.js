@@ -3,7 +3,14 @@ const socketio = require("socket.io");
 const http = require("http");
 const router = require("./router");
 
-const { addUser, removeUser, getUser, getUsersInRoom } = require("./users.js");
+const {
+  addUser,
+  removeUser,
+  getUser,
+  getOtherUsersInRoom,
+} = require("./users.js");
+const { languageSet } = require("./languages.js");
+const languages = require("./languages.js");
 
 const PORT = process.env.PORT || 5000;
 
@@ -25,12 +32,16 @@ io.on("connection", (socket) => {
       user: "admin",
       text: `${user.name} welcome to the room ${user.room}`,
     });
+    const currentMembers = getOtherUsersInRoom(user.room, socket.id);
+    socket.emit("currentMembers", currentMembers);
 
     socket.join(user.room);
 
     socket.broadcast
       .to(user.room)
       .emit("message", { user: "admin", text: `${user.name} has joined` });
+
+    socket.broadcast.to(user.room).emit("memberJoin", user.name);
   });
 
   socket.on("sendMessage", (message, callback) => {
@@ -47,6 +58,9 @@ io.on("connection", (socket) => {
   socket.on("runSignal", () => {
     const user = getUser(socket.id);
     socket.broadcast.to(user.room).emit("runSignal");
+    socket.broadcast
+      .to(user.room)
+      .emit("message", { user: "admin", text: `${user.name} ran the code` });
   });
 
   socket.on("completeSignal", (output) => {
@@ -61,18 +75,31 @@ io.on("connection", (socket) => {
 
   socket.on("syncLanguage", (info) => {
     const user = getUser(socket.id);
-    socket.broadcast.to(user.room).emit("syncLanguage", info);
+    socket.broadcast.to(user.room).emit("syncLanguage", info.language);
+    if (!info.newUser) {
+      socket.broadcast.to(user.room).emit("message", {
+        user: "admin",
+        text: `${user.name} switched the language to ${
+          languageSet[info.language]
+        }`,
+      });
+    }
   });
 
   socket.on("syncReset", () => {
     const user = getUser(socket.id);
     socket.broadcast.to(user.room).emit("syncReset");
+    socket.broadcast.to(user.room).emit("message", {
+      user: "admin",
+      text: `${user.name} reseted the code`,
+    });
   });
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
     const user = removeUser(socket.id);
     if (user) {
+      io.to(user.room).emit("memberLeave", user.name);
       io.to(user.room).emit("message", {
         user: "admin",
         text: `${user.name} has left.`,

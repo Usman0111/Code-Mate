@@ -27,14 +27,15 @@ const TextEditor = () => {
   };
 
   return (
-    <>
+    <div className="mt-2 mb-0 border border-white ">
       <Editor
-        height="90vh"
+        height="80vh"
+        theme="dark"
         language={data.language}
         value={data.code}
         editorDidMount={handleEditorDidMount}
       />
-    </>
+    </div>
   );
 };
 

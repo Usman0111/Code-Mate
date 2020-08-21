@@ -1,0 +1,9 @@
+$body-bg: #191a1f;
+
+$theme-colors: (
+  "secondary": #121316,
+  "chat": #18171b,
+  "info-button": #ffffff,
+  "sign-in": #191a1f,
+);
+@import "~bootstrap/scss/bootstrap";

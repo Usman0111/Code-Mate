@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TextEditor from "../components/TextEditor";
 import IoPanel from "../components/IoPanel";
 import Chat from "../components/Chat";
@@ -8,13 +8,13 @@ import queryString from "query-string";
 import { socket } from "../socket.js";
 
 const Room = ({ location }) => {
-  // const [name, setName] = useState("");
-  // const [room, setRoom] = useState("");
+  const [name, setName] = useState("");
+  const [room, setRoom] = useState("");
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
-    // setName(name);
-    // setRoom(room);
+    setName(name);
+    setRoom(room);
 
     socket.emit("join", { name, room }, (error) => {
       alert(error);
@@ -29,18 +29,18 @@ const Room = ({ location }) => {
   return (
     <Container fluid={true}>
       <Row>
-        <Col sm="6">
-          <Toolbar />
-          <TextEditor />
-        </Col>
-        <Col sm="6">
-          <div className="row h-50 d-inline-block">
+        <div style={{ minWidth: "830px" }}>
+          <Col>
+            <Toolbar />
+            <TextEditor />
+          </Col>
+        </div>
+        <div>
+          <Col>
             <IoPanel />
-          </div>
-          <div className="row h-50 d-inline-block">
-            <Chat />
-          </div>
-        </Col>
+            <Chat room={room} name={name} />
+          </Col>
+        </div>
       </Row>
     </Container>
   );

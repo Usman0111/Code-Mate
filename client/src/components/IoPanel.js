@@ -40,7 +40,7 @@ const IoPanel = (props) => {
               toggle("1");
             }}
           >
-            Input
+            <div className="text-white">Input</div>
           </NavLink>
         </NavItem>
         <NavItem>
@@ -50,30 +50,30 @@ const IoPanel = (props) => {
               toggle("2");
             }}
           >
-            Output
+            <div className="text-white">Output</div>
           </NavLink>
         </NavItem>
       </Nav>
 
-      <TabContent activeTab={data.activeTab}>
+      <TabContent className="mt-1" activeTab={data.activeTab}>
         <TabPane tabId="1">
-          <Form>
-            <FormGroup>
-              <textarea
-                value={data.input}
-                onChange={changeInput}
-                rows="8"
-                cols="102"
-              ></textarea>
-            </FormGroup>
-          </Form>
+          <textarea
+            className=" bg-secondary text-white"
+            value={data.input}
+            onChange={changeInput}
+            rows="8"
+            cols="87"
+          ></textarea>
         </TabPane>
         <TabPane tabId="2">
           <div>
-            <div className="card">
+            <div className="card mb-2 bg-secondary text-white border border-white">
               <div
                 className="card-body overflow-auto"
-                style={{ height: "200px", width: "750px" }}
+                style={{
+                  height: "195px",
+                  width: "645px",
+                }}
               >
                 {data.output.split("\n").map((line, index) => (
                   <div key={index}>{line}</div>

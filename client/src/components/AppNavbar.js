@@ -15,8 +15,8 @@ const AppNavbar = () => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div>
-      <Navbar color="dark" dark expand="md">
+    <div className="bg-secondary">
+      <Navbar dark expand="md" className="mb-3">
         <NavbarBrand href="/">{" \u003c Code / Mate \u003e"}</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
