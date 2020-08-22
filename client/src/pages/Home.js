@@ -1,15 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import {
-  Row,
-  Col,
-  Card,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-} from "reactstrap";
+import { Row, Col, Card, Button, Form, FormGroup, Input } from "reactstrap";
 import Picutre from "../assets/pic2.svg";
 import Typewriter from "typewriter-effect";
 

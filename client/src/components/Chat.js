@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Row, Col, Card, CardBody, Input, Button, Tooltip } from "reactstrap";
+import { Row, Col, Input, Button, Tooltip } from "reactstrap";
 import { socket } from "../socket.js";
 import { DataContext } from "../dataContext";
 
