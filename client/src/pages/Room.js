@@ -6,10 +6,12 @@ import Toolbar from "../components/Toolbar";
 import { Container, Row, Col } from "reactstrap";
 import queryString from "query-string";
 import { socket } from "../socket.js";
+import { useHistory } from "react-router-dom";
 
 const Room = ({ location }) => {
   const [name, setName] = useState("");
   const [room, setRoom] = useState("");
+  let history = useHistory();
 
   useEffect(() => {
     const { name, room } = queryString.parse(location.search);
@@ -17,6 +19,7 @@ const Room = ({ location }) => {
     setRoom(room);
 
     socket.emit("join", { name, room }, (error) => {
+      history.push("/");
       alert(error);
     });
 

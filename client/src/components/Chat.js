@@ -37,7 +37,7 @@ const Chat = (props) => {
       socket.emit("editInput", dataRef.current.input);
     });
     socket.on("memberLeave", (member) => {
-      setMembers(members.filter((currentMember) => currentMember == member));
+      setMembers(members.filter((currentMember) => currentMember === member));
     });
   }, []);
 
