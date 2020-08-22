@@ -22,7 +22,10 @@ const Toolbar = () => {
   const toggle = () => setModal(!modal);
 
   const runCode = () => {
-    dispatch({ type: "SET_OUTPUT", output: "Running Code..." });
+    dispatch({
+      type: "SET_OUTPUT",
+      output: { default: "Press Start...", success: "", error: "" },
+    });
     dispatch({ type: "SET_TAB", tab: "2" });
     fetch(
       `https://cors-anywhere.herokuapp.com/https://run.glot.io/languages/${data.language}/latest`,
@@ -45,10 +48,29 @@ const Toolbar = () => {
     )
       .then((response) => response.json())
       .then((data) => {
-        data.stderr
-          ? dispatch({ type: "SET_OUTPUT", output: data.stderr })
-          : dispatch({ type: "SET_OUTPUT", output: data.stdout });
-        socket.emit("completeSignal", data.stdout || data.stderr);
+        console.log(data);
+
+        if (data.stdout) {
+          dispatch({
+            type: "SET_OUTPUT",
+            output: { default: "", success: data.stdout, error: "" },
+          });
+          socket.emit("completeSignal", {
+            default: "",
+            success: data.stdout,
+            error: "",
+          });
+        } else {
+          dispatch({
+            type: "SET_OUTPUT",
+            output: { default: "", success: "", error: data.stderr },
+          });
+          socket.emit("completeSignal", {
+            default: "",
+            success: "",
+            error: data.stderr,
+          });
+        }
       })
       .catch((err) => console.log(err));
   };
@@ -60,12 +82,15 @@ const Toolbar = () => {
 
   useEffect(() => {
     socket.on("runSignal", () => {
-      dispatch({ type: "SET_OUTPUT", output: "Running Code..." });
+      dispatch({
+        type: "SET_OUTPUT",
+        output: { default: "Press Start...", success: "", error: "" },
+      });
       dispatch({ type: "SET_TAB", tab: "2" });
     });
-    socket.on("completeSignal", (output) =>
-      dispatch({ type: "SET_OUTPUT", output })
-    );
+    socket.on("completeSignal", (output) => {
+      dispatch({ type: "SET_OUTPUT", output });
+    });
   }, [dispatch]);
 
   const clearCode = () => {

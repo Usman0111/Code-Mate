@@ -8,7 +8,7 @@ const initialState = {
     '#include <iostream>\r\nusing namespace std;\r\n\r\nint main() {\r\n    cout << "Hello World!";\r\n    return 0;\r\n}',
   extension: ".cpp",
   input: "",
-  output: "Press Start...",
+  output: { default: "Press Start...", success: "", error: "" },
   language: "cpp",
   activeTab: "1",
 };

@@ -2,6 +2,7 @@ const express = require("express");
 const socketio = require("socket.io");
 const http = require("http");
 const router = require("./router");
+const path = require("path");
 
 const {
   addUser,
@@ -11,8 +12,6 @@ const {
 } = require("./users.js");
 const { languageSet } = require("./languages.js");
 const languages = require("./languages.js");
-
-const PORT = process.env.PORT || 5000;
 
 const app = express();
 const server = http.createServer(app);
@@ -108,6 +107,15 @@ io.on("connection", (socket) => {
   });
 });
 
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  });
+}
+
 app.use(router);
 
+const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`Server started on port ${PORT}`));

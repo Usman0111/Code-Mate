@@ -85,9 +85,16 @@ const Chat = (props) => {
               className="card-body overflow-auto"
               style={{ height: "300px" }}
             >
-              {messages.map((message, index) => (
-                <div key={index}>{`${message.user} : ${message.text}`}</div>
-              ))}
+              {messages.map((message, index) =>
+                message.user === "admin" ? (
+                  <div
+                    key={index}
+                    className="text-admin-color "
+                  >{`${message.text}`}</div>
+                ) : (
+                  <div key={index}>{`${message.user} : ${message.text}`}</div>
+                )
+              )}
             </div>
           </div>
 

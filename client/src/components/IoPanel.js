@@ -75,8 +75,18 @@ const IoPanel = (props) => {
                   width: "645px",
                 }}
               >
-                {data.output.split("\n").map((line, index) => (
+                {data.output.default.split("\n").map((line, index) => (
                   <div key={index}>{line}</div>
+                ))}
+                {data.output.success.split("\n").map((line, index) => (
+                  <div key={index} className="text-output-green">
+                    {line}
+                  </div>
+                ))}
+                {data.output.error.split("\n").map((line, index) => (
+                  <div key={index} className="text-danger">
+                    {line}
+                  </div>
                 ))}
               </div>
             </div>
