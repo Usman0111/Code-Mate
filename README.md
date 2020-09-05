@@ -8,6 +8,12 @@ This app allows two users to connect and edit code in real time. It also allows 
 
 The process of trying to help my peers debug their coding assignments remotely (through Groupme) was slow and inefficient. This web app is intended to improve that process.
 
-## Preview | [link](https://code-mate-site.herokuapp.com/)
+## Stack
+- React
+- NodeJS/Express
+- SocketIO
+- GlotIO API
+
+## Preview | [link](https://code-mate-site.herokuapp.com/) (might load slowly)
 
 ![Preview Image of the Website](preview.PNG)
