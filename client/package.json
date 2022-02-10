@@ -6,7 +6,7 @@
     "@forevolve/bootstrap-dark": "^1.0.0-alpha.1091",
     "@monaco-editor/react": "^3.6.2",
     "bootstrap": "^4.5.2",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "query-string": "^6.13.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
